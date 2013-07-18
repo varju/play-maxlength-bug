@@ -1,4 +1,23 @@
-This is your new Play 2.1 application
-=====================================
+Play 2.1.2 application demonstrating bug with maxLength body handling.
 
-This file will be packaged with your application, when using `play dist`.
+Steps to reproduce:
+
+  play run
+  curl -X POST http://localhost:9000/maxlen -d @conf/application.conf
+
+From the Play console, observe one of these two errors:
+
+  java.lang.NullPointerException
+    at play.core.server.netty.RequestBodyHandler$class.finish$1(RequestBodyHandler.scala:70)
+    at play.core.server.netty.RequestBodyHandler$$anonfun$pushChunk$1$2$$anonfun$apply$2.apply(RequestBodyHandler.scala:53)
+    at play.core.server.netty.RequestBodyHandler$$anonfun$pushChunk$1$2$$anonfun$apply$2.apply(RequestBodyHandler.scala:49)
+    at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:29)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+    at java.lang.Thread.run(Thread.java:724)
+
+or
+
+  [error] play - Oops, unexpected message received in NettyServer (please report this problem): org.jboss.netty.handler.codec.http.DefaultHttpChunk@51be8bea
+  [error] play - Oops, unexpected message received in NettyServer (please report this problem): org.jboss.netty.handler.codec.http.DefaultHttpChunk@371e62f8
+  [error] play - Oops, unexpected message received in NettyServer (please report this problem): org.jboss.netty.handler.codec.http.HttpChunk$1@2bf3a40d
